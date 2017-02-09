@@ -22,7 +22,7 @@ import static frontend.Token.Type.*;
 	*/
 	
 	private Token token(Token.Type type) {
-		
+            return new Token(type, yyline, yycolumn, yytext());
 	}
 	
 	/* Use this method for rules where you need to process yytext() to get the lexeme of the token.
@@ -30,17 +30,23 @@ import static frontend.Token.Type.*;
 	 * Useful for string literals; e.g., the quotes around the literal are part of yytext(),
 	 *       but they should not be part of the lexeme. 
 	*/
-	private Token token(Token.Type type, String text) {
-		
+        private Token token(Token.Type type, String text) {
+
+            return new Token(type, yyline, yycolumn, text);
 	}
 %}
 
-/* This definition may come in handy. If you wish, you can add more definitions here. Added */
+/* This definition may come in handy. If you wish, you can add more definitions here. */
 WhiteSpace = [ ] | \t | \f | \n | \r
 
 
 %%
 /* put in your rules here.    */
+"module" {return token(MODULE);}
+("+"|"-")?[0-9]+ {return token(INT_LITERAL);}
+"/" {return token(DIV);}
+
+
 
 
 /* You don't need to change anything below this line. */

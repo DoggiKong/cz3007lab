@@ -67,6 +67,14 @@ public class LexerTests {
     }
 
     @Test
+    public void testOperator() {
+        runtest("/",
+                new Token(DIV, 0, 0, "/"),
+                new Token(EOF, 0, 1, ""));
+    }
+    
+    
+    @Test
     public void testStringLiteralWithDoubleQuote() {
         runtest("\"\"\"",
                 new Token(STRING_LITERAL, 0, 0, ""),
