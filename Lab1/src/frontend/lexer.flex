@@ -45,6 +45,16 @@ WhiteSpace = [ ] | \t | \f | \n | \r
 "module" {return token(MODULE);}
 ("+"|"-")?[0-9]+ {return token(INT_LITERAL);}
 "/" {return token(DIV);}
+"==" {return token(EQEQ);}
+"=" {return token(EQL);}
+">=" {return token(GEQ);}
+">" {return token(GT);}
+"<=" {return token(LEQ);}
+"<" {return token(LT);}
+"-" {return token(MINUS);}
+"!=" {return token(NEQ);}
+"+" {return token(PLUS);}
+"*" {return token(TIMES);}
 
 
 
