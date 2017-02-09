@@ -40,10 +40,12 @@ import static frontend.Token.Type.*;
 WhiteSpace = [ ] | \t | \f | \n | \r
 
 
-
 %%
 /* put in your rules here.    */
 "module" {return token(MODULE);}
+("+"|"-")?[0-9]+ {return token(INT_LITERAL);}
+
+
 
 
 /* You don't need to change anything below this line. */
