@@ -68,9 +68,11 @@ public class LexerTests {
 
     @Test
     public void testOperator() {
-        runtest("==",
-                new Token(EQEQ, 0, 0, "=="),
-                new Token(EOF, 0, 2, ""));
+        runtest("3/1",
+        		new Token(INT_LITERAL, 0, 0, "3"),
+                new Token(DIV, 0, 1, "/"),
+                new Token(INT_LITERAL, 0, 2, "1"),
+                new Token(EOF, 0, 3, ""));
     }
     
     

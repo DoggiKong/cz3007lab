@@ -44,7 +44,7 @@ WhiteSpace = [ ] | \t | \f | \n | \r
 /* put in your rules here.    */
 "module" {return token(MODULE);}
 ("+"|"-")?[0-9]+ {return token(INT_LITERAL);}
-"/" {return token(DIV);}
+"[0-9]+/[0-9]+" {return token(DIV);}
 "==" {return token(EQEQ);}
 "=" {return token(EQL);}
 ">=" {return token(GEQ);}
