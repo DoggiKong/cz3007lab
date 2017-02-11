@@ -68,13 +68,26 @@ public class LexerTests {
 
     @Test
     public void testOperator() {
-        runtest("3/1",
+        runtest("13==13",
+        		new Token(INT_LITERAL, 0, 0, "13"),
+                new Token(EQEQ, 0, 2, "=="),
+                new Token(INT_LITERAL, 0, 4, "13"),
+                new Token(EOF, 0, 6, ""));
+    }
+
+    @Test
+    public void testOperators() {
+        runtest("3/3==3/3",
         		new Token(INT_LITERAL, 0, 0, "3"),
                 new Token(DIV, 0, 1, "/"),
-                new Token(INT_LITERAL, 0, 2, "1"),
-                new Token(EOF, 0, 3, ""));
+                new Token(INT_LITERAL, 0, 2, "3"),
+                new Token(EQEQ, 0, 3, "=="),
+        		new Token(INT_LITERAL, 0, 5, "3"),
+                new Token(DIV, 0, 6, "/"),
+                new Token(INT_LITERAL, 0, 7, "3"),
+                new Token(EOF, 0, 8, ""));
     }
-    
+
     
     @Test
     public void testStringLiteralWithDoubleQuote() {
