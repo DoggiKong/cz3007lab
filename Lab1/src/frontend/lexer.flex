@@ -78,7 +78,7 @@ WhiteSpace = [ ] | \t | \f | \n | \r
 "+" {return token(PLUS);}
 "*" {return token(TIMES);}
 
-("+"|"-")?[0-9]+ {return token(INT_LITERAL);}
+[0-9]+ {return token(INT_LITERAL);}
 \"(\\.|[^(\")])*\" {return token(STRING_LITERAL, "String");}
 
 
