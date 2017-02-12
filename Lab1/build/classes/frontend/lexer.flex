@@ -41,7 +41,6 @@ import static frontend.Token.Type.*;
 /* This definition may come in handy. If you wish, you can add more definitions here. */
 WhiteSpace = [ ] | \t | \f | \n | \r
 
-
 %%
 /* put in your rules here.    */
 "break" {return token(ELSE);}
@@ -81,7 +80,7 @@ WhiteSpace = [ ] | \t | \f | \n | \r
 [0-9]+ {return token(INT_LITERAL);}
 \"(\\.|[^(\")])*\" {return token(STRING_LITERAL, "String");}
 
-
+{WhiteSpace} {/* Ignore */ }
 
 /* You don't need to change anything below this line. */
 .							{ throw new Error("unexpected character '" + yytext() + "'"); }
