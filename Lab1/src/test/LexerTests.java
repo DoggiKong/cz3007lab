@@ -58,7 +58,6 @@ public class LexerTests {
     public void testKWs() {
         // first argument to runtest is the string to lex; the remaining arguments
         // are the expected tokens
-        System.out.println("ASDASD");
         runtest("module false return while",
                 new Token(MODULE, 0, 0, "module"),
                 new Token(FALSE, 0, 7, "false"),
@@ -68,9 +67,19 @@ public class LexerTests {
     }
 
     @Test
+    public void testKWsLine() {
+        runtest("module false\n\treturn while",
+                new Token(MODULE, 0, 0, "module"),
+                new Token(FALSE, 0, 7, "false"),
+                new Token(RETURN, 1, 1, "return"),
+                new Token(WHILE, 1, 8, "while"),
+                new Token(EOF, 1, 13, ""));
+    }
+
+    @Test
     public void testOperator() {
         runtest("13==13",
-        		new Token(INT_LITERAL, 0, 0, "13"),
+                new Token(INT_LITERAL, 0, 0, "13"),
                 new Token(EQEQ, 0, 2, "=="),
                 new Token(INT_LITERAL, 0, 4, "13"),
                 new Token(EOF, 0, 6, ""));
@@ -79,17 +88,16 @@ public class LexerTests {
     @Test
     public void testOperators() {
         runtest("3/3==3/3",
-        		new Token(INT_LITERAL, 0, 0, "3"),
+                new Token(INT_LITERAL, 0, 0, "3"),
                 new Token(DIV, 0, 1, "/"),
                 new Token(INT_LITERAL, 0, 2, "3"),
                 new Token(EQEQ, 0, 3, "=="),
-        		new Token(INT_LITERAL, 0, 5, "3"),
+                new Token(INT_LITERAL, 0, 5, "3"),
                 new Token(DIV, 0, 6, "/"),
                 new Token(INT_LITERAL, 0, 7, "3"),
                 new Token(EOF, 0, 8, ""));
     }
 
-    
     @Test
     public void testStringLiteralWithDoubleQuote() {
         runtest("\"\"\"",
@@ -115,6 +123,31 @@ public class LexerTests {
                 new Token(EOF, 0, 6, ""));
 
         // Also need to test for false input
+    }
+
+    @Test
+    public void testID() {
+        runtest("a",
+                new Token(ID, 0, 0, "a"),
+                new Token(EOF, 0, 1, ""));
+        runtest("B",
+                new Token(ID, 0, 0, "B"),
+                new Token(EOF, 0, 1, ""));
+        runtest("DA_142",
+                new Token(ID, 0, 0, "DA_142"),
+                new Token(EOF, 0, 6, ""));
+        runtest("K_142",
+                new Token(ID, 0, 0, "K_142"),
+                new Token(EOF, 0, 5, ""));
+        runtest("v1_42",
+                new Token(ID, 0, 0, "v1_42"),
+                new Token(EOF, 0, 5, ""));
+        runtest("v1_42",
+                new Token(ID, 0, 0, "v1_42"),
+                new Token(EOF, 0, 5, ""));
+        runtest("v_",
+                new Token(ID, 0, 0, "v_"),
+                new Token(EOF, 0, 2, ""));
     }
 
 }

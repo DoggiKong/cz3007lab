@@ -80,6 +80,8 @@ WhiteSpace = [ ] | \t | \f | \n | \r
 [0-9]+ {return token(INT_LITERAL);}
 \"(\\.|[^(\")])*\" {return token(STRING_LITERAL, "String");}
 
+[a-zA-Z][a-zA-Z0-9_]* { return token(ID); }
+
 {WhiteSpace} {/* Ignore */ }
 
 /* You don't need to change anything below this line. */
