@@ -31,7 +31,9 @@ import static frontend.Token.Type.*;
 	 *       but they should not be part of the lexeme. 
 	*/
         private Token token(Token.Type type, String text) {
-
+            if (text == "String") {
+                text = yytext().substring(1, yytext().length() - 1);
+            }
             return new Token(type, yyline, yycolumn, text);
 	}
 %}
@@ -42,8 +44,42 @@ WhiteSpace = [ ] | \t | \f | \n | \r
 
 %%
 /* put in your rules here.    */
+"break" {return token(ELSE);}
+"false" {return token(FALSE);}
+"if" {return token(IF);}
+"import" {return token(IMPORT);}
+"int" {return token(INT);}
 "module" {return token(MODULE);}
+"public" {return token(PUBLIC);}
+"return" {return token(RETURN);}
+"true" {return token(TRUE);}
+"type" {return token(TYPE);}
+"void" {return token(VOID);}
+"while" {return token(WHILE);}
+
+"," {return token(COMMA);}
+"[" {return token(LBRACKET);}
+"{" {return token(LCURLY);}
+"(" {return token(LPAREN);}
+"]" {return token(RBRACKET);}
+"}" {return token(RCURLY);}
+")" {return token(RPAREN);}
+";" {return token(SEMICOLON);}
+
+"/" {return token(DIV);}
+"==" {return token(EQEQ);}
+"=" {return token(EQL);}
+">=" {return token(GEQ);}
+">" {return token(GT);}
+"<=" {return token(LEQ);}
+"<" {return token(LT);}
+"-" {return token(MINUS);}
+"!=" {return token(NEQ);}
+"+" {return token(PLUS);}
+"*" {return token(TIMES);}
+
 ("+"|"-")?[0-9]+ {return token(INT_LITERAL);}
+\"(\\.|[^(\")])*\" {return token(STRING_LITERAL, "String");}
 
 
 

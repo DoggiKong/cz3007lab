@@ -31,7 +31,9 @@ import static frontend.Token.Type.*;
 	 *       but they should not be part of the lexeme. 
 	*/
         private Token token(Token.Type type, String text) {
-
+            if (text == "String") {
+                text = yytext().substring(1, yytext().length() - 1);
+            }
             return new Token(type, yyline, yycolumn, text);
 	}
 %}
@@ -77,7 +79,7 @@ WhiteSpace = [ ] | \t | \f | \n | \r
 "*" {return token(TIMES);}
 
 ("+"|"-")?[0-9]+ {return token(INT_LITERAL);}
-"" {return token(STRING_LITERAL);}
+\"(\\.|[^(\")])*\" {return token(STRING_LITERAL, "String");}
 
 
 
