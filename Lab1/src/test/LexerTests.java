@@ -95,6 +95,7 @@ public class LexerTests {
         runtest("-123",
                 new Token(INT_LITERAL, 0, 0, "-123"),
                 new Token(EOF, 0, 4, ""));
+        // Also need to test for false input
     }
 
 }

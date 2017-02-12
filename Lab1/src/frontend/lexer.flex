@@ -47,7 +47,6 @@ WhiteSpace = [ ] | \t | \f | \n | \r
 
 
 
-
 /* You don't need to change anything below this line. */
 .							{ throw new Error("unexpected character '" + yytext() + "'"); }
 <<EOF>>						{ return token(EOF); }
