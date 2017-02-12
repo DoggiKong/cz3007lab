@@ -22,7 +22,7 @@ import static frontend.Token.Type.*;
 	*/
 	
 	private Token token(Token.Type type) {
-		
+            return new Token(type, yyline, yycolumn, yytext());
 	}
 	
 	/* Use this method for rules where you need to process yytext() to get the lexeme of the token.
@@ -30,17 +30,56 @@ import static frontend.Token.Type.*;
 	 * Useful for string literals; e.g., the quotes around the literal are part of yytext(),
 	 *       but they should not be part of the lexeme. 
 	*/
-	private Token token(Token.Type type, String text) {
-		
+        private Token token(Token.Type type, String text) {
+
+            return new Token(type, yyline, yycolumn, text);
 	}
 %}
 
-/* This definition may come in handy. If you wish, you can add more definitions here. Added */
+/* This definition may come in handy. If you wish, you can add more definitions here. */
 WhiteSpace = [ ] | \t | \f | \n | \r
 
 
 %%
 /* put in your rules here.    */
+"break" {return token(ELSE);}
+"false" {return token(FALSE);}
+"if" {return token(IF);}
+"import" {return token(IMPORT);}
+"int" {return token(INT);}
+"module" {return token(MODULE);}
+"public" {return token(PUBLIC);}
+"return" {return token(RETURN);}
+"true" {return token(TRUE);}
+"type" {return token(TYPE);}
+"void" {return token(VOID);}
+"while" {return token(WHILE);}
+
+"," {return token(COMMA);}
+"[" {return token(LBRACKET);}
+"{" {return token(LCURLY);}
+"(" {return token(LPAREN);}
+"]" {return token(RBRACKET);}
+"}" {return token(RCURLY);}
+")" {return token(RPAREN);}
+";" {return token(SEMICOLON);}
+
+"/" {return token(DIV);}
+"==" {return token(EQEQ);}
+"=" {return token(EQL);}
+">=" {return token(GEQ);}
+">" {return token(GT);}
+"<=" {return token(LEQ);}
+"<" {return token(LT);}
+"-" {return token(MINUS);}
+"!=" {return token(NEQ);}
+"+" {return token(PLUS);}
+"*" {return token(TIMES);}
+
+("+"|"-")?[0-9]+ {return token(INT_LITERAL);}
+"" {return token(STRING_LITERAL);}
+
+
 
 
 /* You don't need to change anything below this line. */
