@@ -68,13 +68,13 @@ Function_Declaration = Accessibility Type_Name ID LPAREN Parameter RPAREN LCURLY
 /*
  * A field declaration consists of an accessibility specifier, a type name, an identifier, and a semicolon.
  */
-Field_Declaration = ; /* NOT DONE */
+Field_Declaration = Accessibility Type_Name ID SEMICOLON;
 
 /*
  * A type declaration consists of an accessibility specifier, the keyword type, an identifier, a single equals
  * symbol, a string literal, and a semicolon.
  */
-Type_Declaration = ; /* NOT DONE */
+Type_Declaration = Accessibility TYPE ID EQL STRING_LITERAL SEMICOLON;
 	
 /*
  * An accessibility specifier consists of either the keyword public, or of nothing at all.
@@ -111,7 +111,7 @@ Array_Type = LBRACKET RBRACKET; /* NEED TO FIX LALR CONFLICT -> PLZ ENLIGHTEN ON
 /* A parameter list is a possibly empty list of parameters separated by commas. A parameter is a type name
  * followed by an identifier.
  */ 
-Parameter = ; /* NOT DONE */
+Parameter = ; /* NOT DONE (HOW DO YOU DO SEPARATING COMMA PROPERLY)???? */
 
 /* Statements */
 Statement = Local_Variable
@@ -153,57 +153,97 @@ Else_Optional = ELSE Statement
  * a while statement, which consists of a while keyword, an opening parenthesis, an expression, a closing
  * parenthesis, and a statement;
  */
-While_Statement = ; /* NOT DONE */
+While_Statement = WHILE LPAREN Expression RPAREN Statement;
 
 /*
  * a break statement, which consists of a break keyword followed by a semicolon;
  */
-Break_Statement = ; /* NOT DONE */
+Break_Statement = BREAK SEMICOLON;
  
 /*
  * a return statement, which consists of a return keyword, followed by an optional expression, followed
  * by a semicolon;
  */
-Return_Statement = ; /* NOT DONE */
+Return_Statement = RETURN SEMICOLON;
 
 /*
  * an expression statement, which consists of an expression followed by a semicolon.
  */
-Expression_Statement = ; /* NOT DONE */
+Expression_Statement = Expression SEMICOLON;
 
 
 /* 
  * An expression is either an assignment or a right hand side expression.
  */ 
-Expression = ;/* NOT DONE */
-
+Expression = Assignment
+        | RHS_Expression
+        ;
 /*
  * An assignment is a left hand side expression, followed by a single equals sign, followed by an expression.
  */ 
+Assignment = LHS_Expression EQL Expression; /* PLEASE CHECK IF EQL IS THE SAME AS EQUAL */
 
 /*
- * A left hand side expression is either an identifier or an array access. An array access is a left hand side
+ * A left hand side expression is either an identifier or an array access. 
+ */
+LHS_Expression = ID
+        | Array_Access
+        ;
+
+/*
+ * An array access is a left hand side
  * expression, followed by an opening bracket, followed by an expression, followed by a closing bracket.
  */
+Array_Access = LHS_Expression LBRACKET Expression RBRACKET;
 
 /*
  * A right hand side expression is an arithmetic expression, optionally followed by a comparison operator and
  * another arithmetic expression. A comparison operator is one of EQEQ, NEQ, LT, LEQ, GT, GEQ.
  */
+RHS_Expression = Arithmetic_Expression Comparison_Operator Arithmetic_Expression; /* PLEASE CHECK IF THIS IS CORRECT */
+
+Comparison_Operator = EQEQ
+        | NEQ
+        | LT
+        | LEQ
+        | GT
+        | GEQ
+        | /* PLEASE CHECK IF HAVING AN OPTIONAL HERE IS CORRECT */
+        ;
+
 
 /*
  * An arithmetic expression is either an arithmetic expression, followed by an additive operator, followed by a
  * term; or just a term. An additive operator is either PLUS or MINUS.
  */
+Arithmetic_Expression = Arithmetic_Expression Additive_Operator Term
+        | Term
+        ; /* SHOULD THIS HAVE AN OPTIONAL EMPTY HERE */
+
+Additive_Operator = PLUS
+        | MINUS
+        | /* PLEASE CHECK IF HAVING AN OPTIONAL EMPTY HERE IS CORRECT */
+        ;
 
 /*
  * A term is either a term, followed by a multiplicative operator, followed by a factor; or just a factor. A
  * multiplicative operator is one of TIMES, DIV, MOD.
  */
+Term = Term Multiplicative_Operator Factor
+        | Factor
+        ;
+
+Multiplicative_Operator = TIMES
+        | DIV
+        | MOD
+        ;
 
 /*
  * A factor is either a MINUS followed by a factor, or a primary expression.
  */
+Factor = MINUS Factor
+        | Primary_Expression
+        ;
 
 /*
  * A primary expression is one of the following:
@@ -218,8 +258,22 @@ Expression = ;/* NOT DONE */
  * • a parenthesised expression: an opening parenthesis, followed by an expression, followed by a closing
  * parenthesis.
  */
+Primary_Expression = LHS_Expression
+        | ID LPAREN Expression_List /* NOT DONE (FUNCTION_CALL) */
+        | /* NOT DONE (ARRAY_EXPRESSION) */
+        | STRING_LITERAL
+        | INT_LITERAL
+        | Boolean_Literal
+        | /* NOT DONE (PARENTHESISED EXPRESSION) */
+        ;
 
+Expression_List = Expression COMMA Expression_List /* SHOULD THIS INCLUDE ALL DIFFERENT EXPRESSIONS? AND IS COMMA CORRECT? */
+        |
+        ;
 
+Boolean_Literal = TRUE
+        | FALSE
+        ;
 /*
  * Note that you should not use extended rule syntax offered by Beaver, i.e. you should not use ?, * and
  * + in any rules. Instead, each rule defines a nonterminal symbol and declares the sequence of other symbols that
