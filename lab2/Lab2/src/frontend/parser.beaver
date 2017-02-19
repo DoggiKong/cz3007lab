@@ -244,15 +244,15 @@ Factor = MINUS Factor
 
 /*
  * A primary expression is one of the following:
- * • a left hand side expression;
- * • a function call: an identifier, followed by an opening parenthesis, followed by a possibly empty list of
+ *  - a left hand side expression;
+ *  - a function call: an identifier, followed by an opening parenthesis, followed by a possibly empty list of
  * expressions separated by comma, followed by a closing parenthesis;
- * • an array expression: an opening bracket, followed by a non-empty list of expressions separated by
+ *  - an array expression: an opening bracket, followed by a non-empty list of expressions separated by
  * comma, followed by a closing bracket;
- * • a string literal;
- * • an integer literal;
- * • one of the Boolean literals TRUE and FALSE;
- * • a parenthesised expression: an opening parenthesis, followed by an expression, followed by a closing
+ *  - a string literal;
+ *  - an integer literal;
+ *  - one of the Boolean literals TRUE and FALSE;
+ *  - a parenthesised expression: an opening parenthesis, followed by an expression, followed by a closing
  * parenthesis.
  */
 Primary_Expression = LHS_Expression
