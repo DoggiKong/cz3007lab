@@ -23,15 +23,15 @@
 %goal Module;
 
 // temporary declaration, you can remove this once you have written all other rules
-%goal Dummy;
+// %goal Dummy;
 
 /* TODO: Flesh out the rule for Module, and add rules for other nonterminals. Here is an example
-         of a rule you may want to add:
-         
-   Accessibility = PUBLIC
-		  |
-		  ;
-  */
+ *        of a rule you may want to add:
+ *       
+ *  Accessibility = PUBLIC
+ *		  |
+ *		  ;
+ */
 
 /*
  * A module consists of the keyword module, followed by an identifier, followed by an
@@ -41,7 +41,7 @@ Module = MODULE ID LCURLY Import Declaration RCURLY;
 
 
 /*
- * A module’s imports (nonterminal Imports) consist of zero or more import statements. An import statement
+ * A module's imports (nonterminal Imports) consist of zero or more import statements. An import statement
  * (nonterminal Import) consists of the keyword import, followed by an identifier, followed by a semicolon.
  */
 Import = IMPORT ID SEMICOLON Import
@@ -49,7 +49,7 @@ Import = IMPORT ID SEMICOLON Import
 	;
 
 /* 
- * A module’s declarations (nonterminal Declarations) consist of zero or more declarations. A declaration is
+ * A module's declarations (nonterminal Declarations) consist of zero or more declarations. A declaration is
  * either a function declaration, or a field declaration, or a type declaration.
  */
 Declaration = Function_Declaration Declaration
@@ -63,7 +63,7 @@ Declaration = Function_Declaration Declaration
  * parenthesis, a parameter list, a closing parenthesis, an opening curly brace, a possibly empty list of statements,
  * and a closing curly brace.
  */
-Function_Declaration = Accessibility Type_Name ID LPAREN Parameter RPAREN LCURLY Statements RCURLY;
+Function_Declaration = Accessibility Type_Name ID LPAREN Parameter RPAREN LCURLY Statement RCURLY;
 
 /*
  * A field declaration consists of an accessibility specifier, a type name, an identifier, and a semicolon.
@@ -104,14 +104,19 @@ Primitive_Type = VOID
  * avoid LALR conflicts, you will need to expand the definition of the array type nonterminal as discussed in the
  * tutorial.)
  */
-Array_Type = LBRACKET RBRACKET; /* NEED TO FIX LALR CONFLICT -> PLZ ENLIGHTEN ON HOW TO DO */
+Array_Type = INT LBRACKET RBRACKET
+	| BOOLEAN LBRACKET RBRACKET
+	| VOID LBRACKET RBRACKET
+	| ID LBRACKET RBRACKET
+	| Array_Type LBRACKET RBRACKET
+	;
 
 
 
 /* A parameter list is a possibly empty list of parameters separated by commas. A parameter is a type name
  * followed by an identifier.
  */ 
-Parameter = ; /* NOT DONE (HOW DO YOU DO SEPARATING COMMA PROPERLY)???? */
+Parameter = Type_Name ID; /* NOT DONE (HOW DO YOU DO SEPARATING COMMA PROPERLY)???? */
 
 /* Statements */
 Statement = Local_Variable
@@ -164,7 +169,9 @@ Break_Statement = BREAK SEMICOLON;
  * a return statement, which consists of a return keyword, followed by an optional expression, followed
  * by a semicolon;
  */
-Return_Statement = RETURN SEMICOLON;
+Return_Statement = RETURN SEMICOLON
+	| RETURN Expression SEMICOLON
+	;
 
 /*
  * an expression statement, which consists of an expression followed by a semicolon.
@@ -194,13 +201,16 @@ LHS_Expression = ID
  * An array access is a left hand side
  * expression, followed by an opening bracket, followed by an expression, followed by a closing bracket.
  */
-Array_Access = LHS_Expression LBRACKET Expression RBRACKET;
+Array_Access = ID LBRACKET Expression RBRACKET
+	| LHS_Expression LBRACKET Expression RBRACKET
+	;
 
 /*
  * A right hand side expression is an arithmetic expression, optionally followed by a comparison operator and
  * another arithmetic expression. A comparison operator is one of EQEQ, NEQ, LT, LEQ, GT, GEQ.
  */
-RHS_Expression = Arithmetic_Expression Comparison_Operator Arithmetic_Expression; /* PLEASE CHECK IF THIS IS CORRECT */
+RHS_Expression = Arithmetic_Expression
+		| Arithmetic_Expression Comparison_Operator Arithmetic_Expression; /* PLEASE CHECK IF THIS IS CORRECT */
 
 Comparison_Operator = EQEQ
         | NEQ
@@ -208,7 +218,6 @@ Comparison_Operator = EQEQ
         | LEQ
         | GT
         | GEQ
-        | /* PLEASE CHECK IF HAVING AN OPTIONAL HERE IS CORRECT */
         ;
 
 
@@ -222,7 +231,6 @@ Arithmetic_Expression = Arithmetic_Expression Additive_Operator Term
 
 Additive_Operator = PLUS
         | MINUS
-        | /* PLEASE CHECK IF HAVING AN OPTIONAL EMPTY HERE IS CORRECT */
         ;
 
 /*
@@ -259,29 +267,24 @@ Factor = MINUS Factor
  * parenthesis.
  */
 Primary_Expression = LHS_Expression
-        | ID LPAREN Expression_List /* NOT DONE (FUNCTION_CALL) */
-        | /* NOT DONE (ARRAY_EXPRESSION) */
+        | Function_Call /* NOT DONE (FUNCTION_CALL) */
+        | Array_Expression /* NOT DONE (ARRAY_EXPRESSION) */
         | STRING_LITERAL
         | INT_LITERAL
         | Boolean_Literal
-        | /* NOT DONE (PARENTHESISED EXPRESSION) */
+        | Paren_Expression /* NOT DONE (PARENTHESISED EXPRESSION) */
         ;
+
+Function_Call = ID LPAREN Expression_List RPAREN;
 
 Expression_List = Expression COMMA Expression_List /* SHOULD THIS INCLUDE ALL DIFFERENT EXPRESSIONS? AND IS COMMA CORRECT? */
         |
         ;
 
+Array_Expression = LBRACKET Expression_List RBRACKET;
+
 Boolean_Literal = TRUE
         | FALSE
-        ;
-/*
- * Note that you should not use extended rule syntax offered by Beaver, i.e. you should not use ?, * and
- * + in any rules. Instead, each rule defines a nonterminal symbol and declares the sequence of other symbols that
- * will produce that nonterminal. Note also that your parser should have at most one shift-reduce conflict.
- */
-	
-/**/
-
-/* Dummy rule to make the lexer compile. Remove this once you have written all other rules. */	  
-Dummy = MODULE INT VOID IF ELSE WHILE RETURN BREAK BOOLEAN PUBLIC TRUE FALSE INT_LITERAL STRING_LITERAL ID TYPE IMPORT
-           PLUS MINUS TIMES DIV MOD EQEQ NEQ LEQ GEQ LT GT LBRACKET RPAREN COMMA RCURLY LCURLY SEMICOLON RBRACKET LPAREN EQL;
+		;
+		
+Paren_Expression = LPAREN Expression RPAREN;
