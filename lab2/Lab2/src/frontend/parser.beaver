@@ -41,7 +41,7 @@ Module = MODULE ID LCURLY Import Declaration RCURLY;
 
 
 /*
- * A module's imports (nonterminal Imports) consist of zero or more import statements. An import statement
+ * A module imports (nonterminal Imports) consist of zero or more import statements. An import statement
  * (nonterminal Import) consists of the keyword import, followed by an identifier, followed by a semicolon.
  */
 Import = IMPORT ID SEMICOLON Import
@@ -49,7 +49,7 @@ Import = IMPORT ID SEMICOLON Import
 	;
 
 /* 
- * A module's declarations (nonterminal Declarations) consist of zero or more declarations. A declaration is
+ * A module declarations (nonterminal Declarations) consist of zero or more declarations. A declaration is
  * either a function declaration, or a field declaration, or a type declaration.
  */
 Declaration = Function_Declaration Declaration
