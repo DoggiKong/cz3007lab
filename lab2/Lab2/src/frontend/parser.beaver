@@ -52,7 +52,7 @@ Declaration = Function_Declaration Declaration
  * parenthesis, a parameter list, a closing parenthesis, an opening curly brace, a possibly empty list of statements,
  * and a closing curly brace.
  */
-Function_Declaration = Accessibility Type_Name ID LPAREN Parameter_List RPAREN LCURLY Statement RCURLY;
+Function_Declaration = Accessibility Type_Name ID LPAREN Parameter_List RPAREN LCURLY Statement_List RCURLY;
 
 /*
  * A field declaration consists of an accessibility specifier, a type name, an identifier, and a semicolon.
@@ -109,6 +109,7 @@ Parameter = Type_Name ID;
 
 Parameter_List = Parameter COMMA Parameter_List
     | Parameter
+    |
     ;
 
 /* Statements */
