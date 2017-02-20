@@ -52,7 +52,7 @@ Declaration = Function_Declaration Declaration
  * parenthesis, a parameter list, a closing parenthesis, an opening curly brace, a possibly empty list of statements,
  * and a closing curly brace.
  */
-Function_Declaration = Accessibility Type_Name ID LPAREN Parameter RPAREN LCURLY Statement RCURLY;
+Function_Declaration = Accessibility Type_Name ID LPAREN Parameter_List RPAREN LCURLY Statement RCURLY;
 
 /*
  * A field declaration consists of an accessibility specifier, a type name, an identifier, and a semicolon.
@@ -105,7 +105,11 @@ Array_Type = INT LBRACKET RBRACKET
 /* A parameter list is a possibly empty list of parameters separated by commas. A parameter is a type name
  * followed by an identifier.
  */ 
-Parameter = Type_Name ID; /* NOT DONE (HOW DO YOU DO SEPARATING COMMA PROPERLY)???? */
+Parameter = Type_Name ID;
+
+Parameter_List = Parameter COMMA Parameter_List
+    | Parameter
+    ;
 
 /* Statements */
 Statement = Local_Variable
@@ -200,7 +204,7 @@ Array_Access = LHS_Expression LBRACKET Expression RBRACKET;
  * another arithmetic expression. A comparison operator is one of EQEQ, NEQ, LT, LEQ, GT, GEQ.
  */
 RHS_Expression = Arithmetic_Expression
-		| Arithmetic_Expression Comparison_Operator Arithmetic_Expression; /* PLEASE CHECK IF THIS IS CORRECT */
+		| Arithmetic_Expression Comparison_Operator Arithmetic_Expression;
 
 Comparison_Operator = EQEQ
         | NEQ
@@ -217,7 +221,7 @@ Comparison_Operator = EQEQ
  */
 Arithmetic_Expression = Arithmetic_Expression Additive_Operator Term
         | Term
-        ; /* SHOULD THIS HAVE AN OPTIONAL EMPTY HERE */
+        ;
 
 Additive_Operator = PLUS
         | MINUS
@@ -257,12 +261,12 @@ Factor = MINUS Factor
  * parenthesis.
  */
 Primary_Expression = LHS_Expression
-        | Function_Call /* NOT DONE (FUNCTION_CALL) */
-        | Array_Expression /* NOT DONE (ARRAY_EXPRESSION) */
+        | Function_Call
+        | Array_Expression
         | STRING_LITERAL
         | INT_LITERAL
         | Boolean_Literal
-        | Paren_Expression /* NOT DONE (PARENTHESISED EXPRESSION) */
+        | Paren_Expression
         ;
 
 Function_Call = ID LPAREN Expression_List RPAREN;
