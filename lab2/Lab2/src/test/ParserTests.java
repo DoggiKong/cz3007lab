@@ -163,7 +163,7 @@ public class ParserTests {
                 + "} ");
         runtest("module Test {"
                 + "void foo() {"
-                + "a[0][0];"
+                + "a[a=0][a=0];"
                 + "}"
                 + "} ");
         // Function

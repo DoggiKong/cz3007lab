@@ -185,20 +185,21 @@ Expression = Assignment
 /*
  * An assignment is a left hand side expression, followed by a single equals sign, followed by an expression.
  */ 
-Assignment = LHS_Expression EQL Expression; /* PLEASE CHECK IF EQL IS THE SAME AS EQUAL */
+Assignment = LHS_Expression EQL Expression;
 
 /*
  * A left hand side expression is either an identifier or an array access. 
  */
-LHS_Expression = ID
-        | Array_Access
+LHS_Expression = ID Array_Access
         ;
 
 /*
  * An array access is a left hand side
  * expression, followed by an opening bracket, followed by an expression, followed by a closing bracket.
  */
-Array_Access = LHS_Expression LBRACKET Expression RBRACKET;
+Array_Access = LBRACKET Expression RBRACKET Array_Access
+    |
+    ;
 
 /*
  * A right hand side expression is an arithmetic expression, optionally followed by a comparison operator and
