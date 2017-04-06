@@ -159,9 +159,9 @@ public class ExprCodeGenerator extends Visitor<Value> {
 		 *       generate code in the more specialised visitor methods visitAddExpr,
 		 *       visitSubExpr, etc., instead
 		 */
-		final Value lhs = this.wrap(nd.getLeft().accept(this));
-		final Value rhs = this.wrap(nd.getRight().accept(this));
-		Value binValue = this.wrap(nd.accept(new Visitor<Value>() {
+		Value lhs = wrap(nd.getLeft().accept(this));
+		Value rhs = wrap(nd.getRight().accept(this));
+		Value value = wrap(nd.accept(new Visitor<Value>() {
 			@Override
 			public Value visitAddExpr(AddExpr nd) {
 				return Jimple.v().newAddExpr(lhs, rhs);
@@ -183,7 +183,7 @@ public class ExprCodeGenerator extends Visitor<Value> {
 				return Jimple.v().newRemExpr(lhs, rhs);
 			}
 		}));
-		return binValue;
+		return value;
 	}
 	
 	/** Generate code for a comparison expression. */
