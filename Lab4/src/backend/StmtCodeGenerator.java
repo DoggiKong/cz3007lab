@@ -2,20 +2,13 @@ package backend;
 
 import java.util.HashMap;
 
+import ast.*;
 import soot.Unit;
 import soot.Value;
 import soot.jimple.IntConstant;
 import soot.jimple.Jimple;
 import soot.jimple.NopStmt;
 import soot.util.Chain;
-import ast.Block;
-import ast.BreakStmt;
-import ast.ExprStmt;
-import ast.IfStmt;
-import ast.ReturnStmt;
-import ast.Stmt;
-import ast.Visitor;
-import ast.WhileStmt;
 
 /**
  * This class is in charge of creating Jimple code for a given statement (and its nested
@@ -43,6 +36,8 @@ public class StmtCodeGenerator extends Visitor<Void> {
 	@Override
 	public Void visitExprStmt(ExprStmt nd) {
 		/* TODO: generate code for expression statement (hint: use ExprCodeGenerator.generate) */
+		Value value = ExprCodeGenerator.generate(nd.getExpr(), fcg);
+		// ??????????????????????????????????????????????????????????? WHAT'S NEXT
 		return null;
 	}
 	
@@ -51,6 +46,10 @@ public class StmtCodeGenerator extends Visitor<Void> {
 	public Void visitBreakStmt(BreakStmt nd) {
 		/* TODO: generate code for break statement (hint: use ASTNode.getEnclosingLoop and breakTargets;
 		 *       use units.add() to insert the statement into the surrounding method) */
+		WhileStmt whileStmt = nd.getEnclosingLoop();
+		Unit breakTarget = this.breakTargets.get(whileStmt);
+        units.add(j.newGotoStmt(breakTarget));
+        // I THINK IS RIGHT!?!?!?
 		return null;
 	}
 
@@ -98,6 +97,15 @@ public class StmtCodeGenerator extends Visitor<Void> {
 		/* TODO: generate code for while statement as discussed in lecture; add the NOP statement you
 		 *       generate as the break target to the breakTargets map
 		 */
+		NopStmt nopStmt = j.newNopStmt();
+		units.add(nopStmt);
+		Value condition = ExprCodeGenerator.generate(nd.getExpr(), fcg);
+		NopStmt nopStmt1 = j.newNopStmt();
+		units.add(j.newIfStmt(j.newEqExpr(condition, IntConstant.v(0)), nopStmt1));
+		breakTargets.put(nd, nopStmt1);
+		nd.getBody().accept(this);
+		units.add(j.newGotoStmt(nopStmt));
+		units.add(nopStmt1);
 		return null;
 	}
 }

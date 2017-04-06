@@ -98,14 +98,14 @@ public class ExprCodeGenerator extends Visitor<Value> {
 	@Override
 	public Value visitIntLiteral(IntLiteral nd) {
 		/* TODO: return something meaningful here */
-		return null;
+		return IntConstant.v(nd.getValue()); // YEA???!??!?!?!
 	}
 	
 	/** Generate code for a string literal. */
 	@Override
 	public Value visitStringLiteral(StringLiteral nd) {
 		/* TODO: return something meaningful here */
-		return null;
+		return StringConstant.v(nd.getValue()); // YEA???!?
 	}
 	
 	/** Generate code for a Boolean literal. */
@@ -113,7 +113,7 @@ public class ExprCodeGenerator extends Visitor<Value> {
 	public Value visitBooleanLiteral(BooleanLiteral nd) {
 		/* TODO: return something meaningful here (hint: translate 'true' to integer
 		 *       constant 1, 'false' to integer constant 0) */
-		return null;
+		return (nd.getValue()) ? IntConstant.v(1) : IntConstant.v(0); // YEA???!?
 	}
 	
 	/** Generate code for an array literal. */
@@ -134,7 +134,7 @@ public class ExprCodeGenerator extends Visitor<Value> {
 	@Override
 	public Value visitArrayIndex(ArrayIndex nd) {
 		/* TODO: generate code for array index */
-		return null;
+		return Jimple.v().newArrayRef(wrap(nd.getIndex().accept(this)), wrap(nd.getBase().accept(this))); // YEA?!>!!?
 	}
 	
 	/** Generate code for a variable name. */
