@@ -98,14 +98,14 @@ public class ExprCodeGenerator extends Visitor<Value> {
 	@Override
 	public Value visitIntLiteral(IntLiteral nd) {
 		/* TODO: return something meaningful here */
-		return IntConstant.v(nd.getValue()); // YEA???!??!?!?!
+	    return IntConstant.v(nd.getValue().intValue());
 	}
 	
 	/** Generate code for a string literal. */
 	@Override
 	public Value visitStringLiteral(StringLiteral nd) {
 		/* TODO: return something meaningful here */
-		return StringConstant.v(nd.getValue()); // YEA???!?
+	    return StringConstant.v(nd.getValue());
 	}
 	
 	/** Generate code for a Boolean literal. */
@@ -113,7 +113,13 @@ public class ExprCodeGenerator extends Visitor<Value> {
 	public Value visitBooleanLiteral(BooleanLiteral nd) {
 		/* TODO: return something meaningful here (hint: translate 'true' to integer
 		 *       constant 1, 'false' to integer constant 0) */
-		return (nd.getValue()) ? IntConstant.v(1) : IntConstant.v(0); // YEA???!?
+	    Boolean truthBoolean = nd.getValue();
+	    Value value;
+	    if(truthBoolean)
+	      value = IntConstant.v(1);
+	    else 
+	      value = IntConstant.v(0);
+	    return value;
 	}
 	
 	/** Generate code for an array literal. */
@@ -134,7 +140,9 @@ public class ExprCodeGenerator extends Visitor<Value> {
 	@Override
 	public Value visitArrayIndex(ArrayIndex nd) {
 		/* TODO: generate code for array index */
-		return Jimple.v().newArrayRef(wrap(nd.getIndex().accept(this)), wrap(nd.getBase().accept(this))); // YEA?!>!!?
+	    Value index = this.wrap(nd.getIndex().accept(this));
+	    Value base = this.wrap(nd.getBase().accept(this)); 
+	    return Jimple.v().newArrayRef(base, index);
 	}
 	
 	/** Generate code for a variable name. */
@@ -159,31 +167,31 @@ public class ExprCodeGenerator extends Visitor<Value> {
 		 *       generate code in the more specialised visitor methods visitAddExpr,
 		 *       visitSubExpr, etc., instead
 		 */
-		Value lhs = wrap(nd.getLeft().accept(this));
-		Value rhs = wrap(nd.getRight().accept(this));
-		Value value = wrap(nd.accept(new Visitor<Value>() {
-			@Override
-			public Value visitAddExpr(AddExpr nd) {
-				return Jimple.v().newAddExpr(lhs, rhs);
-			}
-			@Override
-			public Value visitSubExpr(SubExpr nd) {
-				return Jimple.v().newSubExpr(lhs, rhs);
-			}
-			@Override
-			public Value visitMulExpr(MulExpr nd) {
-				return Jimple.v().newMulExpr(lhs, rhs);
-			}
-			@Override
-			public Value visitDivExpr(DivExpr nd) {
-				return Jimple.v().newDivExpr(lhs, rhs);
-			}
-			@Override
-			public Value visitModExpr(ModExpr nd) {
-				return Jimple.v().newRemExpr(lhs, rhs);
-			}
-		}));
-		return value;
+	    final Value lhsValue = this.wrap(nd.getLeft().accept(this));
+	    final Value rhsValue = this.wrap(nd.getRight().accept(this));
+	    Value binV = this.wrap(nd.accept(new Visitor<Value>() {
+	      @Override
+	      public Value visitAddExpr(AddExpr nd) {
+	        return Jimple.v().newAddExpr(lhsValue, rhsValue);
+	      }
+	      @Override
+	      public Value visitSubExpr(SubExpr nd) {
+	        return Jimple.v().newSubExpr(lhsValue, rhsValue);
+	      }
+	      @Override
+	      public Value visitMulExpr(MulExpr nd) {
+	        return Jimple.v().newMulExpr(lhsValue, rhsValue);
+	      }
+	      @Override
+	      public Value visitDivExpr(DivExpr nd) {
+	        return Jimple.v().newDivExpr(lhsValue, rhsValue);
+	      }
+	      @Override
+	      public Value visitModExpr(ModExpr nd) {
+	        return Jimple.v().newRemExpr(lhsValue, rhsValue);
+	      }
+	    }));
+	    return binV;
 	}
 	
 	/** Generate code for a comparison expression. */

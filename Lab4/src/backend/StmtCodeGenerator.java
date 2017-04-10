@@ -36,8 +36,7 @@ public class StmtCodeGenerator extends Visitor<Void> {
 	@Override
 	public Void visitExprStmt(ExprStmt nd) {
 		/* TODO: generate code for expression statement (hint: use ExprCodeGenerator.generate) */
-		Value value = ExprCodeGenerator.generate(nd.getExpr(), fcg);
-		// ??????????????????????????????????????????????????????????? WHAT'S NEXT
+		ExprCodeGenerator.generate(nd.getExpr(), this.fcg);
 		return null;
 	}
 	
@@ -46,10 +45,9 @@ public class StmtCodeGenerator extends Visitor<Void> {
 	public Void visitBreakStmt(BreakStmt nd) {
 		/* TODO: generate code for break statement (hint: use ASTNode.getEnclosingLoop and breakTargets;
 		 *       use units.add() to insert the statement into the surrounding method) */
-		WhileStmt whileStmt = nd.getEnclosingLoop();
-		Unit breakTarget = this.breakTargets.get(whileStmt);
-        units.add(j.newGotoStmt(breakTarget));
-        // I THINK IS RIGHT!?!?!?
+	    WhileStmt whileStmt = nd.getEnclosingLoop();
+	    Unit breakTargetUnit = this.breakTargets.get(whileStmt);
+	    this.units.add(j.newGotoStmt(breakTargetUnit));
 		return null;
 	}
 
@@ -97,15 +95,17 @@ public class StmtCodeGenerator extends Visitor<Void> {
 		/* TODO: generate code for while statement as discussed in lecture; add the NOP statement you
 		 *       generate as the break target to the breakTargets map
 		 */
-		NopStmt nopStmt = j.newNopStmt();
-		units.add(nopStmt);
-		Value condition = ExprCodeGenerator.generate(nd.getExpr(), fcg);
-		NopStmt nopStmt1 = j.newNopStmt();
-		units.add(j.newIfStmt(j.newEqExpr(condition, IntConstant.v(0)), nopStmt1));
-		breakTargets.put(nd, nopStmt1);
-		nd.getBody().accept(this);
-		units.add(j.newGotoStmt(nopStmt));
-		units.add(nopStmt1);
+	    NopStmt l1 = j.newNopStmt();
+	    this.units.add(l1);
+	   
+	    Value condition = ExprCodeGenerator.generate(nd.getExpr(), this.fcg);
+	    NopStmt l2 = j.newNopStmt();
+	    
+	    this.units.add(j.newIfStmt(j.newEqExpr(condition, IntConstant.v(0)),l2));
+	    this.breakTargets.put(nd, l2);
+	    nd.getBody().accept(this);
+	    this.units.add(j.newGotoStmt(l1));
+	    this.units.add(l2);
 		return null;
 	}
 }
